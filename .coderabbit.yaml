@@ -1,0 +1,57 @@
+# CodeRabbit AI Code Review Configuration
+# Schema: https://coderabbit.ai/integrations/coderabbit-overrides.v2.json
+version: 2
+
+language: "en-US"
+
+early_access: false
+
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - "main"
+      - "master"
+
+  path_filters:
+    - "!dist/**"
+    - "!build/**"
+    - "!.cache/**"
+    - "!coverage/**"
+    - "!node_modules/**"
+    - "!pnpm-lock.yaml"
+    - "!*.tsbuildinfo"
+
+  tools:
+    biome:
+      enabled: true
+
+  instructions: |
+    You are reviewing an enterprise-grade Express.js TypeScript codebase designed with strict SOLID principles and Low-Level Design (LLD) patterns.
+
+    When performing reviews, strictly verify:
+    1. SOLID Principles:
+       - Single Responsibility: Controllers handle HTTP inputs/outputs only. Services handle business logic. Repositories handle persistence.
+       - Open/Closed: Ensure diagnostic probes and extensible features implement interfaces (e.g., IHealthIndicator) rather than modifying core services.
+       - Liskov Substitution: All operational errors must extend `AppError` and carry appropriate status codes and error codes.
+       - Interface Segregation: Keep contracts focused (e.g., ILogger, IUserRepository, IUserService).
+       - Dependency Inversion: Classes must receive dependencies via constructor injection. Avoid hardcoded `new` instantiations inside services or controllers. Instantiations belong in `src/container.ts`.
+    2. File Naming:
+       - All file names MUST follow `kebab-case` (e.g., `user.controller.ts`, `winston-logger.ts`). Flag any `camelCase` or `PascalCase` file names.
+    3. Input Validation:
+       - All external request payloads (body, query, params) must be validated at the route boundary using Zod schemas and the `validate` middleware.
+    4. Error Handling:
+       - Do not leak raw errors or stack traces in production responses. Ensure errors are routed through Express's next() or thrown as `AppError`.
+    5. Performance:
+       - Verify that high-speed tools (@biomejs/biome, tsup, Vitest) and incremental TypeScript caching remain uninhibited.
+
+chat:
+  auto_reply: true
