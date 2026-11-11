@@ -63,7 +63,7 @@ jobs:
           cache: "pnpm"
 
       - name: Restore TypeScript Incremental Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .cache/.tsbuildinfo
           key: ${{ runner.os }}-tsbuildinfo-${{ hashFiles('pnpm-lock.yaml', 'tsconfig.json') }}-${{ github.sha }}
